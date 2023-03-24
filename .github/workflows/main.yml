@@ -16,16 +16,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v1.5.1
+
+      - name: Flutter Doctor
+        run: flutter doctor -v
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Analyze project source
         run: flutter analyze
+
+      - name: Build
+        run: flutter build
         
       - name: Run tests
-        run: flutter test
+        run: flutter test --coverage --no-sound-null-safety
