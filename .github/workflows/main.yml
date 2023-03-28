@@ -20,19 +20,27 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v1.5.1
+        uses: subosito/flutter-action@v1.11.1
 
       - name: Flutter Doctor
         run: flutter doctor -v
 
-      - name: Install dependencies
-        run: flutter pub get
-
       - name: Analyze project source
         run: flutter analyze
 
-      - name: Build
-        run: flutter build
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Unit Tests
+        run: flutter test --no-sound-null-safety --coverage --exclude-tags integration_test
+        working-directory: ./test/unit_test
+
+      - name: Integration Tests
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --exclude-tags unit_test
+        working-directory: ./test/integration_test
+
+      - name: Build APK
+        run: flutter build apk
         
       - name: Run tests
         run: flutter test --coverage --no-sound-null-safety
